@@ -34,15 +34,17 @@ uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
 
 
 # Add a dropdown box to choose file type
-file_type = st.selectbox("Choose Algorithm Type", ("NONE","Classification Type", "Regression Type"))
+file_type = st.selectbox("Choose Algorithm Type", ("NONE","Classification Type","Cluster Type","Regression Type"))
 # Load the appropriate file type based on user selection
 
 if file_type=="NONE":
     pass
 elif file_type=="Classification Type":
-    algo=st.selectbox("Choose Algorithm",("K NEAREST NEIGHBOUR","SVMC","DECISION TREE","K-MEANS"))
+    algo=st.selectbox("Choose Algorithm",("K NEAREST NEIGHBOUR","SVMC","DECISION TREE",))
+elif file_type=="Cluster Type":
+    algo=st.selectbox("Choose Algorithm",("K-MEANS","K-MEDOIDS","DB-SCAN"))
 else:
-    algo=st.selectbox("Choose Algorithm",("LINEAR REGRESSION","SVMR","LASSO REGRESSION"))
+    algo=st.selectbox("Choose Algorithm",("LINEAR REGRESSION","SVMR","LASSO REGRESSION","RIDGE REGRESSION","LOGISTIC REGRESSION"))
 
 # function to compare dataset
 
@@ -331,3 +333,208 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
+    elif algo=="K-MEDOIDS":
+        image_path = 'k-medoids-cluster.png'  # Path to your K-Medoids diagram
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: flex-end;">
+                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400" />
+                <p style="font-size: 24px;">{"K MEDOIDS ALGO FLOW DIAGRAM"}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.write("Clustered DataFrame:")
+        st.write(df)
+        
+        wscc = []
+        range_values = range(1, 11)
+        scaler = StandardScaler()
+        df_scaled = scaler.fit_transform(df)
+        for i in range_values:
+            kmedoids = KMedoids(n_clusters=i, random_state=0)
+            kmedoids.fit(df_scaled)
+            wscc.append(kmedoids.inertia_)
+        
+        plt.figure(figsize=(5, 4), facecolor='grey')
+        plt.plot(wscc, 'rx-', marker='*', color='red')
+        plt.xlabel('Cluster Number', fontsize=10)
+        plt.title('ELBOW', fontsize=15)
+        st.pyplot(plt)
+
+        num_clusters = st.slider("Select number of clusters:", min_value=1, max_value=10, value=2)
+        # K-Medoids clustering
+        kmedoids = KMedoids(n_clusters=num_clusters, random_state=0)
+        kmedoids.fit(df_scaled)
+        labels = kmedoids.labels_
+        
+        # Add cluster labels to DataFrame
+        df['cluster'] = labels
+
+        # Display clustered DataFrame
+        plt.figure(figsize=(8, 6))
+        plt.scatter(df.iloc[:, 0], df.iloc[:, 1], c=labels, cmap='viridis', label='Cluster')
+        plt.scatter(df.iloc[kmedoids.medoid_indices_, 0], df.iloc[kmedoids.medoid_indices_, 1], marker='x', color='red', s=200, label='Medoids')
+        plt.title('K-Medoids Clustering')
+        plt.xlabel('Feature 1')
+        plt.ylabel('Feature 2')
+        plt.legend()
+        st.pyplot(plt)
+
+    elif algo=="DB-SCAN":
+        image_path = 'DB-SCAN.png'  # Path to your DBSCAN diagram
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: flex-end;">
+                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400" />
+                <p style="font-size: 24px;">{"DB-SCAN ALGO FLOW DIAGRAM"}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        st.write("Clustered DataFrame:")
+        st.write(df)
+
+        scaler = StandardScaler()
+        df_scaled = scaler.fit_transform(df)
+
+        eps_value = st.slider("Select eps value:", min_value=0.1, max_value=10.0, value=0.5, step=0.1)
+        min_samples_value = st.slider("Select min_samples value:", min_value=1, max_value=20, value=5)
+
+        # DBSCAN clustering
+        dbscan = DBSCAN(eps=eps_value, min_samples=min_samples_value)
+        dbscan.fit(df_scaled)
+        labels = dbscan.labels_
+
+        # Add cluster labels to DataFrame
+        df['cluster'] = labels
+
+        # Display clustered DataFrame
+        plt.figure(figsize=(8, 6))
+        unique_labels = set(labels)
+        colors = plt.cm.viridis(np.linspace(0, 1, len(unique_labels)))
+
+        for k, col in zip(unique_labels, colors):
+            if k == -1:
+                # Black used for noise
+                col = 'k'
+                marker = 'x'
+            else:
+                marker = 'o'
+            class_member_mask = (labels == k)
+            xy = df[class_member_mask]
+            plt.plot(xy.iloc[:, 0], xy.iloc[:, 1], marker, markerfacecolor=col, markeredgecolor='k', markersize=8, linestyle='')
+
+        plt.title('DBSCAN Clustering')
+        plt.xlabel('Feature 1')
+        plt.ylabel('Feature 2')
+        plt.legend([f'Cluster {label}' for label in unique_labels if label != -1] + ['Noise'])
+        st.pyplot(plt)
+
+    elif algo=="RIDGE REGRESSION":
+        alpha = st.slider("Select regularization parameter (alpha):", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
+        ridge = Ridge(alpha=alpha)
+        ridge.fit(X_train, y_train)
+
+        # Making predictions
+        y_pred = ridge.predict(X_test)
+        mse = mean_squared_error(y_test, y_pred)
+        st.write(f"Mean Squared Error: {mse}")
+        r2_test = r2_score(y_test, y_pred)
+        r2_train = r2_score(y_train, ridge.predict(X_train))
+        st.write(f"R² Score on Test Set: {r2_test}")
+        st.write(f"R² Score on Training Set: {r2_train}")
+
+        # Plotting the regression line (for simple linear regression or 2D case)
+        plt.figure(figsize=(6, 4))
+        plt.scatter(y_test, y_pred, alpha=0.5)
+        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2)
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.title('Actual vs Predicted')
+        st.pyplot(plt)
+
+        # Plotting R² scores vs Alpha
+        alphas = np.linspace(0.01, 10.0, 100)
+        r2_train_scores = []
+        r2_test_scores = []
+
+        for a in alphas:
+            ridge = Ridge(alpha=a)
+            ridge.fit(X_train, y_train)
+            r2_train_scores.append(r2_score(y_train, ridge.predict(X_train)))
+            r2_test_scores.append(r2_score(y_test, ridge.predict(X_test)))
+
+        plt.figure(figsize=(6, 4))
+        plt.plot(alphas, r2_train_scores, label='Train R²')
+        plt.plot(alphas, r2_test_scores, label='Test R²')
+        plt.xlabel('Alpha')
+        plt.ylabel('R² Score')
+        plt.title('R² Score vs Alpha')
+        plt.legend()
+        st.pyplot(plt)
+
+        image_path = 'Ridge-regression.png'  # Path to your Ridge Regression diagram
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: flex-end;">
+                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="600" />
+                <p style="font-size: 18px;">{"RIDGE REGRESSION ALGO FLOW DIAGRAM"}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    elif algo=="LOGISTIC REGRESSION":
+        c_value = st.slider("Select inverse of regularization strength (C):", min_value=0.01, max_value=10.0, value=1.0, step=0.01)
+        logistic = LogisticRegression(C=c_value, max_iter=1000)
+        logistic.fit(X_train, y_train)
+
+        # Making predictions
+        y_pred = logistic.predict(X_test)
+        acc = accuracy_score(y_test, y_pred)
+        st.write(f"Accuracy Score: {acc}")
+        st.write("Classification Report:")
+        st.text(classification_report(y_test, y_pred))
+
+        # Plotting confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        plt.title('Confusion Matrix')
+        st.pyplot(plt)
+
+        # Plotting Accuracy vs C values
+        c_values = np.linspace(0.01, 10.0, 100)
+        train_scores = []
+        test_scores = []
+
+        for c in c_values:
+            logistic = LogisticRegression(C=c, max_iter=1000)
+            logistic.fit(X_train, y_train)
+            train_scores.append(logistic.score(X_train, y_train))
+            test_scores.append(logistic.score(X_test, y_test))
+
+        plt.figure(figsize=(6, 4))
+        plt.plot(c_values, train_scores, label='Train Accuracy')
+        plt.plot(c_values, test_scores, label='Test Accuracy')
+        plt.xlabel('C Value')
+        plt.ylabel('Accuracy')
+        plt.title('Accuracy vs C Value')
+        plt.legend()
+        st.pyplot(plt)
+
+        image_path = 'logistic.png'  # Path to your Logistic Regression diagram
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: flex-end;">
+                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="600" />
+                <p style="font-size: 18px;">{"LOGISTIC REGRESSION ALGO FLOW DIAGRAM"}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
