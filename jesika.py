@@ -17,6 +17,9 @@ import base64
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import recall_score
+from sklearn.metrics import r2_score
+
 
 
 
@@ -87,11 +90,13 @@ if uploaded_file is not None:
         mse = mean_squared_error(y_test, y_pred)
         mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
-
+        
         st.write(f"The Mean Squared Error is: {mse}", font=("Arial", 34))
         st.write(f"The Mean Absolute Error is: {mae}", font=("Arial", 34))
         st.write(f"The R² Score is: {r2}", font=("Arial", 34))
-
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        
         # Optionally, plot y_test vs y_pred to visualize regression performance
         plt.figure(figsize=(6, 4))
         plt.scatter(y_test, y_pred, alpha=0.5)
@@ -130,10 +135,17 @@ if uploaded_file is not None:
         knn_classifier.fit(X_train, y_train)
         y_pred = knn_classifier.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
-        
+        image_path = 'accuracy.jpg'
         st.write(f"Accuracy: {accuracy}")
         f1 = f1_score(y_test, y_pred, average='macro')
+        image_path = 'F1.png'
         st.write(f"F1 Score (macro): {f1.mean()}")
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        recall = recall_score(y_test, y_pred, average='macro')
+        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.write(f"The recall score is: {recall:.2f}")
+        image_path = 'recall.png'
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
@@ -142,6 +154,9 @@ if uploaded_file is not None:
         plt.ylabel('Actual')
         plt.title('Confusion Matrix for KNN')
         st.pyplot(plt)
+        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
+        st.caption("This mapping is used for interpreting the confusion matrix.")
+
         image_path = 'KNN.png'  # Path to your SVR image
         st.markdown(
             f"""
@@ -159,9 +174,17 @@ if uploaded_file is not None:
         y_pred = dt_classifier.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
         st.write(f"Accuracy: {accuracy}")
+        image_path = 'accuracy.png'
         # Calculating F1 score
         f1 = f1_score(y_test, y_pred, average='macro')
         st.write(f"F1 Score (macro): {f1}")
+        image_path = 'F1.png'
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        recall = recall_score(y_test, y_pred, average='macro')
+        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.write(f"The recall score is: {recall:.2f}")
+        image_path = 'recall.png'
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
@@ -170,6 +193,8 @@ if uploaded_file is not None:
         plt.ylabel('Actual')
         plt.title('Confusion Matrix for Decision Tree')
         st.pyplot(plt)
+        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
+        st.caption("This mapping is used for interpreting the confusion matrix.")
         image_path = 'decision-tree-algo.png'  # Path to your SVR image
         st.markdown(
             f"""
@@ -235,6 +260,9 @@ if uploaded_file is not None:
         st.write(f"Mean Squared Error (MSE): {mse}")
         mae = mean_absolute_error(y_test, y_pred)
         st.write(f"Mean Absolute Error (MAE): {mae}")
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+    
         #plotting the graph
         plt.figure(figsize=(8, 6))
         plt.scatter(y_test, y_pred, color='blue')
@@ -265,6 +293,9 @@ if uploaded_file is not None:
         r2_train = r2_score(y_train, lasso.predict(X_train))
         st.write(f"R² Score on Test Set: {r2_test}")
         st.write(f"R² Score on Training Set: {r2_train}")
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+    
         # Plotting the regression line (for simple linear regression or 2D case)
         plt.figure(figsize=(6, 4))
         plt.scatter(y_test, y_pred, alpha=0.5)
@@ -312,10 +343,18 @@ if uploaded_file is not None:
 
         accuracy = accuracy_score(y_test, y_pred)
         f1_scores = cross_val_score(svm_classifier, X_train, y_train, cv=5, scoring='f1_macro')
-
+        recall = recall_score(y_test, y_pred, average='macro')
+        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.write(f"The recall score is: {recall:.2f}")
+        image_path = 'recall.png'
         st.write(f"The Accuracy is: {accuracy}")
         st.write(f"The F1 Score is: {f1_scores.mean()}")
-
+        r2 = r2_score(y_test, y_pred)
+        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        recall = recall_score(y_test, y_pred, average='macro')
+        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.write(f"The recall score is: {recall:.2f}")
+        image_path = 'recall.png'
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(5, 4))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
@@ -323,6 +362,9 @@ if uploaded_file is not None:
         plt.ylabel('Actual')
         plt.title('Confusion Matrix for SVMC')
         st.pyplot(plt)
+        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
+        st.caption("This mapping is used for interpreting the confusion matrix.")
+
         image_path = 'svmc.png'  # Path to your SVMR image
         st.markdown(
             f"""
@@ -446,7 +488,9 @@ if uploaded_file is not None:
         r2_train = r2_score(y_train, ridge.predict(X_train))
         st.write(f"R² Score on Test Set: {r2_test}")
         st.write(f"R² Score on Training Set: {r2_train}")
-
+        r2 = r2_score(y_test, y_pred)
+        
+        st.write(f"Precision of data (R² Score): {r2:.2f}")        
         # Plotting the regression line (for simple linear regression or 2D case)
         plt.figure(figsize=(6, 4))
         plt.scatter(y_test, y_pred, alpha=0.5)
@@ -497,7 +541,6 @@ if uploaded_file is not None:
         st.write(f"Accuracy Score: {acc}")
         st.write("Classification Report:")
         st.text(classification_report(y_test, y_pred))
-
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6, 4))
