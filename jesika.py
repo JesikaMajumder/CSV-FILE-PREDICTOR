@@ -139,6 +139,12 @@ if uploaded_file is not None:
         st.write(f"Accuracy: {accuracy}")
         f1 = f1_score(y_test, y_pred, average='macro')
         image_path = 'F1.png'
+        st.markdown(
+            f"""
+            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
+            """,
+            unsafe_allow_html=True
+        )
         st.write(f"F1 Score (macro): {f1.mean()}")
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
@@ -146,6 +152,12 @@ if uploaded_file is not None:
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
         image_path = 'recall.png'
+        st.markdown(
+            f"""
+            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
+            """,
+            unsafe_allow_html=True
+        )
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
@@ -179,12 +191,24 @@ if uploaded_file is not None:
         f1 = f1_score(y_test, y_pred, average='macro')
         st.write(f"F1 Score (macro): {f1}")
         image_path = 'F1.png'
+        st.markdown(
+            f"""
+            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
+            """,
+            unsafe_allow_html=True
+        )
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
         image_path = 'recall.png'
+        st.markdown(
+            f"""
+            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
+            """,
+            unsafe_allow_html=True
+        )
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
@@ -347,6 +371,12 @@ if uploaded_file is not None:
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
         image_path = 'recall.png'
+        st.markdown(
+            f"""
+            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
+            """,
+            unsafe_allow_html=True
+        )
         st.write(f"The Accuracy is: {accuracy}")
         st.write(f"The F1 Score is: {f1_scores.mean()}")
         r2 = r2_score(y_test, y_pred)
