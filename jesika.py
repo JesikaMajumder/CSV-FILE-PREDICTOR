@@ -22,7 +22,7 @@ from sklearn.metrics import r2_score
 from statistics import mean
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
-from sklearn_extra.cluster import KMedoids
+import kmedoids
 
 
 
@@ -428,8 +428,8 @@ if uploaded_file is not None:
         scaler = StandardScaler()
         df_scaled = scaler.fit_transform(df)
         for i in range_values:
-            kmedoids = KMedoids(n_clusters=i, random_state=0)
-            kmedoids.fit(df_scaled)
+            Kmedoids = kmedoids(n_clusters=i, random_state=0)
+            Kmedoids.fit(df_scaled)
             wscc.append(kmedoids.inertia_)
         
         plt.figure(figsize=(5, 4), facecolor='grey')
@@ -440,9 +440,9 @@ if uploaded_file is not None:
 
         num_clusters = st.slider("Select number of clusters:", min_value=1, max_value=10, value=2)
         # K-Medoids clustering
-        kmedoids = KMedoids(n_clusters=num_clusters, random_state=0)
-        kmedoids.fit(df_scaled)
-        labels = kmedoids.labels_
+        Kmedoids = kmedoids(n_clusters=num_clusters, random_state=0)
+        Kmedoids.fit(df_scaled)
+        labels = Kmedoids.labels_
         
         # Add cluster labels to DataFrame
         df['cluster'] = labels
@@ -450,7 +450,7 @@ if uploaded_file is not None:
         # Display clustered DataFrame
         plt.figure(figsize=(8, 6))
         plt.scatter(df.iloc[:, 0], df.iloc[:, 1], c=labels, cmap='viridis', label='Cluster')
-        plt.scatter(df.iloc[kmedoids.medoid_indices_, 0], df.iloc[kmedoids.medoid_indices_, 1], marker='x', color='red', s=200, label='Medoids')
+        plt.scatter(df.iloc[Kmedoids.medoid_indices_, 0], df.iloc[Kmedoids.medoid_indices_, 1], marker='x', color='red', s=200, label='Medoids')
         plt.title('K-Medoids Clustering')
         plt.xlabel('Feature 1')
         plt.ylabel('Feature 2')
