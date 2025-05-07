@@ -534,6 +534,9 @@ if uploaded_file is not None:
         plt.ylabel('Actual')
         plt.title('Confusion Matrix')
         st.pyplot(plt)
+        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
+        st.caption("This mapping is used for interpreting the confusion matrix.")
+
 
         # Plotting Accuracy vs C values
         c_values = np.linspace(0.01, 10.0, 100)
