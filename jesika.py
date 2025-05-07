@@ -21,6 +21,7 @@ from sklearn.metrics import recall_score
 from sklearn.metrics import r2_score
 from statistics import mean
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
 
 
 
