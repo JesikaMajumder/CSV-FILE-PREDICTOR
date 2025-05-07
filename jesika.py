@@ -147,7 +147,8 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        st.write(f"F1 Score (macro): {f1.mean()}")
+        f1_mean = np.mean(f1)  # If f1 is a NumPy array
+        st.write(f"F1 Score (macro): {f1_mean()}")
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
         recall = recall_score(y_test, y_pred, average='macro')
