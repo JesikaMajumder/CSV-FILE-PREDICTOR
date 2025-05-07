@@ -507,61 +507,13 @@ if uploaded_file is not None:
         plt.legend([f'Cluster {label}' for label in unique_labels if label != -1] + ['Noise'])
         st.pyplot(plt)
 
-    elif algo=="RIDGE REGRESSION":
-        alpha = st.slider("Select regularization parameter (alpha):", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
-        ridge = Ridge(alpha=alpha)
-        ridge.fit(X_train, y_train)
+    
 
-        # Making predictions
-        y_pred = ridge.predict(X_test)
-        mse = mean_squared_error(y_test, y_pred)
-        st.write(f"Mean Squared Error: {mse}")
-        r2_test = r2_score(y_test, y_pred)
-        r2_train = r2_score(y_train, ridge.predict(X_train))
-        st.write(f"R² Score on Test Set: {r2_test}")
-        st.write(f"R² Score on Training Set: {r2_train}")
-        r2 = r2_score(y_test, y_pred)
+       
+       
+
+       
         
-        st.write(f"Precision of data (R² Score): {r2:.2f}")        
-        # Plotting the regression line (for simple linear regression or 2D case)
-        plt.figure(figsize=(6, 4))
-        plt.scatter(y_test, y_pred, alpha=0.5)
-        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=2)
-        plt.xlabel('Actual')
-        plt.ylabel('Predicted')
-        plt.title('Actual vs Predicted')
-        st.pyplot(plt)
-
-        # Plotting R² scores vs Alpha
-        alphas = np.linspace(0.01, 10.0, 100)
-        r2_train_scores = []
-        r2_test_scores = []
-
-        for a in alphas:
-            ridge = Ridge(alpha=a)
-            ridge.fit(X_train, y_train)
-            r2_train_scores.append(r2_score(y_train, ridge.predict(X_train)))
-            r2_test_scores.append(r2_score(y_test, ridge.predict(X_test)))
-
-        plt.figure(figsize=(6, 4))
-        plt.plot(alphas, r2_train_scores, label='Train R²')
-        plt.plot(alphas, r2_test_scores, label='Test R²')
-        plt.xlabel('Alpha')
-        plt.ylabel('R² Score')
-        plt.title('R² Score vs Alpha')
-        plt.legend()
-        st.pyplot(plt)
-
-        image_path = 'Ridge-regression.png'  # Path to your Ridge Regression diagram
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: flex-end;">
-                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="600" />
-                <p style="font-size: 18px;">{"RIDGE REGRESSION ALGO FLOW DIAGRAM"}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
     elif algo=="LOGISTIC REGRESSION":
         c_value = st.slider("Select inverse of regularization strength (C):", min_value=0.01, max_value=10.0, value=1.0, step=0.01)
         logistic = LogisticRegression(C=c_value, max_iter=1000)
