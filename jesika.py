@@ -49,7 +49,7 @@ elif file_type=="Classification Type":
 elif file_type=="Cluster Type":
     algo=st.selectbox("Choose Algorithm",("K-MEANS","K-MEDOIDS","DB-SCAN"))
 else:
-    algo=st.selectbox("Choose Algorithm",("LINEAR REGRESSION","SVMR","LASSO REGRESSION","RIDGE REGRESSION","LOGISTIC REGRESSION"))
+    algo=st.selectbox("Choose Algorithm",("LINEAR REGRESSION","SVMR","LASSO REGRESSION","LOGISTIC REGRESSION"))
 
 # function to compare dataset
 
