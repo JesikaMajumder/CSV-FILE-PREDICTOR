@@ -28,7 +28,7 @@ from sklearn.cluster import DBSCAN
 
 
 import matplotlib.pyplot as plt
-st.title("Execution of Machine Learning Algorithm on Different Datasets")
+st.title("WEB-BASED PLATFORM FOR EXECUTING AND COMPARING MACHINE LEARNING ALGORITHMS")
 
 # Read the CSV file
 uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
@@ -203,9 +203,9 @@ if uploaded_file is not None:
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
         recall = recall_score(y_test, y_pred, average='macro')
-        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h8 style='font-family: Arial;'>Recall: {recall:.2f}</h8>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
-        image_path = 'recall.png'
+    
         st.markdown(
             f"""
             <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
@@ -408,54 +408,10 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-    elif algo=="K-MEDOIDS":
-        image_path = 'k-medoids-cluster.png'  # Path to your K-Medoids diagram
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: flex-end;">
-                <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400" />
-                <p style="font-size: 24px;">{"K MEDOIDS ALGO FLOW DIAGRAM"}</p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+   
+       
 
-        st.write("Clustered DataFrame:")
-        st.write(df)
-        
-        wscc = []
-        range_values = range(1, 11)
-        scaler = StandardScaler()
-        df_scaled = scaler.fit_transform(df)
-        for i in range_values:
-            Kmedoids = kmedoids(n_clusters=i, random_state=0)
-            Kmedoids.fit(df_scaled)
-            wscc.append(kmedoids.inertia_)
-        
-        plt.figure(figsize=(5, 4), facecolor='grey')
-        plt.plot(wscc, 'rx-', marker='*', color='red')
-        plt.xlabel('Cluster Number', fontsize=10)
-        plt.title('ELBOW', fontsize=15)
-        st.pyplot(plt)
-
-        num_clusters = st.slider("Select number of clusters:", min_value=1, max_value=10, value=2)
-        # K-Medoids clustering
-        Kmedoids = kmedoids(n_clusters=num_clusters, random_state=0)
-        Kmedoids.fit(df_scaled)
-        labels = Kmedoids.labels_
-        
-        # Add cluster labels to DataFrame
-        df['cluster'] = labels
-
-        # Display clustered DataFrame
-        plt.figure(figsize=(8, 6))
-        plt.scatter(df.iloc[:, 0], df.iloc[:, 1], c=labels, cmap='viridis', label='Cluster')
-        plt.scatter(df.iloc[Kmedoids.medoid_indices_, 0], df.iloc[Kmedoids.medoid_indices_, 1], marker='x', color='red', s=200, label='Medoids')
-        plt.title('K-Medoids Clustering')
-        plt.xlabel('Feature 1')
-        plt.ylabel('Feature 2')
-        plt.legend()
-        st.pyplot(plt)
+       
 
     elif algo=="DB-SCAN":
         image_path = 'DB-SCAN.png'  # Path to your DBSCAN diagram
