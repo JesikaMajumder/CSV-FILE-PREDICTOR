@@ -206,12 +206,7 @@ if uploaded_file is not None:
         st.markdown(f"<h8 style='font-family: Arial;'>Recall: {recall:.2f}</h8>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
     
-        st.markdown(
-            f"""
-            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
-            """,
-            unsafe_allow_html=True
-        )
+    
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
