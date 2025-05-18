@@ -188,11 +188,13 @@ if uploaded_file is not None:
         dt_classifier.fit(X_train, y_train)
         y_pred = dt_classifier.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
-        st.write(f"Accuracy: {accuracy}")
+        st.markdown(f"<h3><b>Accuracy: {accuracy:.2f}</b></h3>", unsafe_allow_html=True)
+
         image_path = 'accuracy.png'
         # Calculating F1 score
         f1 = f1_score(y_test, y_pred, average='macro')
-        st.write(f"F1 Score (macro): {f1}")
+        st.markdown(f"<h3><b>F1 Score (macro): {f1:.2f}</b></h3>", unsafe_allow_html=True)
+
         image_path = 'F1.png'
         st.markdown(
             f"""
@@ -201,7 +203,15 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
         r2 = r2_score(y_test, y_pred)
-        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        st.markdown(f"<h3><b>Precision of data (R² Score): {r2:.2f}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style="font-size:20px; font-weight:bold;">
+            Precision of data (R² Score): {r2:.2f}
+        </div>
+    """, unsafe_allow_html=True)
+
+        
+
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h8 style='font-family: Arial;'>Recall: {recall:.2f}</h8>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
