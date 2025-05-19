@@ -289,11 +289,11 @@ if uploaded_file is not None:
         linear_reg.fit(X_train, y_train)
         y_pred = linear_reg.predict(X_test)
         mse = mean_squared_error(y_test, y_pred)
-        st.markdown(f"<h3 style='font-weight:bold;'>Mean Squared Error (MSE): {mse}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Mean Squared Error (MSE): {mse}</h5>", unsafe_allow_html=True)
         mae = mean_absolute_error(y_test, y_pred)
-        st.markdown(f"<h3 style='font-weight:bold;'>Mean Absolute Error (MAE): {mae}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Mean Absolute Error (MAE): {mae}</h5>", unsafe_allow_html=True)
         r2 = r2_score(y_test, y_pred)
-        st.markdown(f"<h3 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
 
     
         #plotting the graph
