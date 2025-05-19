@@ -377,7 +377,7 @@ if uploaded_file is not None:
         f1_scores = cross_val_score(svm_classifier, X_train, y_train, cv=5, scoring='f1_macro')
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
-       <h2 style='font-size:28px; color:blue; font-weight:bold; text-align:center;'>The recall score is: 0.86</h2>
+        <h2 style='font-size:28px; color:blue; font-weight:bold; text-align:center;'>The recall score is: 0.86</h2>
 
         image_path = 'recall.png'
         st.markdown(
