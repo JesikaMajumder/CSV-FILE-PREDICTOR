@@ -320,13 +320,13 @@ if uploaded_file is not None:
         # Making predictions
         y_pred = lasso.predict(X_test)
         mse = mean_squared_error(y_test, y_pred)
-        st.write(f"Mean Squared Error: {mse}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Mean Squared Error: {mse}</h3>", unsafe_allow_html=True)
         r2_test = r2_score(y_test, y_pred)
         r2_train = r2_score(y_train, lasso.predict(X_train))
-        st.write(f"R² Score on Test Set: {r2_test}")
-        st.write(f"R² Score on Training Set: {r2_train}")
+        st.markdown(f"<h3 style='font-weight:bold;'>R² Score on Test Set: {r2_test}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='font-weight:bold;'>R² Score on Training Set: {r2_train}</h3>", unsafe_allow_html=True)
         r2 = r2_score(y_test, y_pred)
-        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
     
         # Plotting the regression line (for simple linear regression or 2D case)
         plt.figure(figsize=(6, 4))
