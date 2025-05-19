@@ -93,9 +93,9 @@ if uploaded_file is not None:
         mae = mean_absolute_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
         
-        st.write(f"The Mean Squared Error is: {mse}", font=("Arial", 34))
-        st.write(f"The Mean Absolute Error is: {mae}", font=("Arial", 34))
-        st.write(f"The R² Score is: {r2}", font=("Arial", 34))
+        st.markdown(f"<h5 style='font-weight:bold;'>Mean Squared Error (MSE): {mse}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Mean Absolute Error (MAE): {mae}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
         
