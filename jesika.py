@@ -152,7 +152,7 @@ if uploaded_file is not None:
         st.markdown(f"<h5 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h5 style='font-family: Arial;'>Recall: {recall:.2f}</h5>", unsafe_allow_html=True)
-        st.write(f"The recall score is: {recall:.2f}")
+        st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
         image_path = 'recall.png'
         st.markdown(
             f"""
@@ -485,9 +485,12 @@ if uploaded_file is not None:
         # Making predictions
         y_pred = logistic.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        st.markdown(f"<h3 style='font-weight:bold;'>Accuracy Score: {acc}</h3>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='font-weight:bold;'>Classification Report:</h3>", unsafe_allow_html=True)
-        st.text(classification_report(y_test, y_pred))
+        f1 = f1_score(y_test, y_pred, average='macro')
+        precision = precision_score(y_test, y_pred, average='macro')
+        st.markdown(f"<h4 style='font-weight:bold;'>Accuracy Score: {acc}</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>F1 Score (macro): {f1:.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision (macro): {precision:.4f}</h5>", unsafe_allow_html=True)
+
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6, 4))
