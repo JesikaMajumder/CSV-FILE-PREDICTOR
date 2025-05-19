@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
 from sklearn.svm import SVC, SVR
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, mean_squared_error
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, mean_squared_error, precision_score
 import seaborn as sns
 from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
