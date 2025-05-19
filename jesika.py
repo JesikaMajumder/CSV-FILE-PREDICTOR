@@ -47,7 +47,7 @@ if file_type=="NONE":
 elif file_type=="Classification Type":
     algo=st.selectbox("Choose Algorithm",("K NEAREST NEIGHBOUR","SVMC","DECISION TREE",))
 elif file_type=="Cluster Type":
-    algo=st.selectbox("Choose Algorithm",("K-MEANS","K-MEDOIDS","DB-SCAN"))
+    algo=st.selectbox("Choose Algorithm",("K-MEANS","DB-SCAN"))
 else:
     algo=st.selectbox("Choose Algorithm",("LINEAR REGRESSION","SVMR","LASSO REGRESSION","LOGISTIC REGRESSION"))
 
@@ -386,10 +386,11 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        st.write(f"The Accuracy is: {accuracy}")
-        st.write(f"The F1 Score is: {f1_scores.mean()}")
+        st.markdown(f"<h3 style='font-weight:bold;'>The Accuracy is: {accuracy}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='font-weight:bold;'>The F1 Score is: {f1_scores.mean()}</h3>", unsafe_allow_html=True)
+
         r2 = r2_score(y_test, y_pred)
-        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.write(f"The recall score is: {recall:.2f}")
@@ -485,8 +486,8 @@ if uploaded_file is not None:
         # Making predictions
         y_pred = logistic.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        st.write(f"Accuracy Score: {acc}")
-        st.write("Classification Report:")
+        st.markdown(f"<h3 style='font-weight:bold;'>Accuracy Score: {acc}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='font-weight:bold;'>Classification Report:</h3>", unsafe_allow_html=True)
         st.text(classification_report(y_test, y_pred))
         # Plotting confusion matrix
         cm = confusion_matrix(y_test, y_pred)
