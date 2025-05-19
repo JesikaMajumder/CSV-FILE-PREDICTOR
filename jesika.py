@@ -139,6 +139,8 @@ if uploaded_file is not None:
         image_path = 'accuracy.jpg'
         st.write(f"Accuracy: {accuracy}")
         f1 = f1_score(y_test, y_pred, average='macro')
+        st.write(f"F1 Score (macro): {f1:.4f}")
+
         image_path = 'F1.png'
         st.markdown(
             f"""
@@ -146,8 +148,6 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        f1 = f1_score(y_true, y_pred, average='macro')
-        st.write(f"F1 Score (macro): {f1:.4f}")
         r2 = r2_score(y_test, y_pred)
         st.write(f"Precision of data (R² Score): {r2:.2f}")
         recall = recall_score(y_test, y_pred, average='macro')
@@ -385,11 +385,11 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        st.markdown(f"<h3 style='font-weight:bold;'>The Accuracy is: {accuracy}</h3>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='font-weight:bold;'>The F1 Score is: {f1_scores.mean()}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>The Accuracy is: {accuracy}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>The F1 Score is: {f1_scores.mean()}</h5>", unsafe_allow_html=True)
 
         r2 = r2_score(y_test, y_pred)
-        st.markdown(f"<h3 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
