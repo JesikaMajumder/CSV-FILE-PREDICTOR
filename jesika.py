@@ -97,7 +97,6 @@ if uploaded_file is not None:
         st.markdown(f"<h5 style='font-weight:bold;'>Mean Absolute Error (MAE): {mae}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         r2 = r2_score(y_test, y_pred)
-        st.markdown(f"<h5 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         
         # Optionally, plot y_test vs y_pred to visualize regression performance
         plt.figure(figsize=(6, 4))
