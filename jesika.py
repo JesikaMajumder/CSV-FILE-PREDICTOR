@@ -213,8 +213,8 @@ if uploaded_file is not None:
         
 
         recall = recall_score(y_test, y_pred, average='macro')
-        st.markdown(f"<h8 style='font-family: Arial;'>Recall: {recall:.2f}</h8>", unsafe_allow_html=True)
-        st.write(f"The recall score is: {recall:.2f}")
+        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='font-weight:bold;'>The recall score is: {recall:.2f}</h3>", unsafe_allow_html=True)
     
     
         # Plotting confusion matrix
