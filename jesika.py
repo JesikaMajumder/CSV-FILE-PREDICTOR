@@ -289,11 +289,12 @@ if uploaded_file is not None:
         linear_reg.fit(X_train, y_train)
         y_pred = linear_reg.predict(X_test)
         mse = mean_squared_error(y_test, y_pred)
-        st.write(f"Mean Squared Error (MSE): {mse}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Mean Squared Error (MSE): {mse}</h3>", unsafe_allow_html=True)
         mae = mean_absolute_error(y_test, y_pred)
-        st.write(f"Mean Absolute Error (MAE): {mae}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Mean Absolute Error (MAE): {mae}</h3>", unsafe_allow_html=True)
         r2 = r2_score(y_test, y_pred)
-        st.write(f"Precision of data (R² Score): {r2:.2f}")
+        st.markdown(f"<h3 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
+
     
         #plotting the graph
         plt.figure(figsize=(8, 6))
@@ -392,7 +393,7 @@ if uploaded_file is not None:
         st.markdown(f"<h3 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h3>", unsafe_allow_html=True)
         recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
-        st.write(f"The recall score is: {recall:.2f}")
+        st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
         image_path = 'recall.png'
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(5, 4))
