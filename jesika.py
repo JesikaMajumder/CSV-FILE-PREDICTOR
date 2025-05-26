@@ -201,17 +201,29 @@ if uploaded_file is not None:
         )
 
     elif algo=="DECISION TREE":
+        # Train Decision Tree
         dt_classifier = DecisionTreeClassifier()
         dt_classifier.fit(X_train, y_train)
         y_pred = dt_classifier.predict(X_test)
+        
+        # Metrics
         accuracy = accuracy_score(y_test, y_pred)
-        st.markdown(f"<h3><b>Accuracy: {accuracy:.2f}</b></h3>", unsafe_allow_html=True)
-
-        image_path = 'accuracy.png'
-        # Calculating F1 score
         f1 = f1_score(y_test, y_pred, average='macro')
+        r2 = r2_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred, average='macro')
+        precision = precision_score(y_test, y_pred, average='macro')
+        
+        if y.dtype == 'object' or y.dtype.name == 'category':
+            label_encoder = LabelEncoder()
+            y = label_encoder.fit_transform(y)
+            class_labels = label_encoder.classes_
+        else:
+            class_labels = np.unique(y)
+        
+        # Display scores
+        st.markdown(f"<h3><b>Accuracy: {accuracy:.2f}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"<h3><b>F1 Score (macro): {f1:.2f}</b></h3>", unsafe_allow_html=True)
-
+        
         image_path = 'F1.png'
         st.markdown(
             f"""
@@ -219,32 +231,48 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        r2 = r2_score(y_test, y_pred)
+        
         st.markdown(f"<h3><b>Precision of data (R² Score): {r2:.2f}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style="font-size:20px; font-weight:bold;">
             Precision of data (R² Score): {r2:.2f}
         </div>
-    """, unsafe_allow_html=True)
-
+        """, unsafe_allow_html=True)
         
-
-        recall = recall_score(y_test, y_pred, average='macro')
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='font-weight:bold;'>The recall score is: {recall:.2f}</h3>", unsafe_allow_html=True)
-    
-    
-        # Plotting confusion matrix
+        
+        # Detect class labels
+        if 'label_encoder' in locals():
+            class_labels = list(label_encoder.classes_)
+        else:
+            class_labels = sorted(np.unique(y_test))
+        
+        # Confusion matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6,4))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=class_labels, yticklabels=class_labels)
         plt.xlabel('Predicted')
         plt.ylabel('Actual')
         plt.title('Confusion Matrix for Decision Tree')
         st.pyplot(plt)
-        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
-        st.caption("This mapping is used for interpreting the confusion matrix.")
-        image_path = 'decision-tree-algo.png'  # Path to your SVR image
+        
+        # TP, FP, FN, TN per class
+        st.markdown("### Confusion Matrix Analysis (Per Class)")
+        for i, class_name in enumerate(class_labels):
+            TP = cm[i, i]
+            FP = cm[:, i].sum() - TP
+            FN = cm[i, :].sum() - TP
+            TN = cm.sum() - (TP + FP + FN)
+        
+            st.markdown(f"**Class `{class_name}`**")
+            st.write(f"- True Positive (TP): {TP}")
+            st.write(f"- False Positive (FP): {FP}")
+            st.write(f"- False Negative (FN): {FN}")
+            st.write(f"- True Negative (TN): {TN}")
+            st.markdown("---")
+
         st.markdown(
             f"""
             <div style="display: flex; justify-content: flex-end;">
