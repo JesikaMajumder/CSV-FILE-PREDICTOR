@@ -232,14 +232,12 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
         
-        st.markdown(f"<h3><b>Precision of data (R² Score): {r2:.2f}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style="font-size:20px; font-weight:bold;">
             Precision of data (R² Score): {r2:.2f}
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='font-weight:bold;'>The recall score is: {recall:.2f}</h3>", unsafe_allow_html=True)
         
         # Detect class labels
