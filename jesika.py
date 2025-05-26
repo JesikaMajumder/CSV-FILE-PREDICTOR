@@ -543,42 +543,75 @@ if uploaded_file is not None:
        
         
     elif algo=="LOGISTIC REGRESSION":
+        # Slider for C value
         c_value = st.slider("Select inverse of regularization strength (C):", min_value=0.01, max_value=10.0, value=1.0, step=0.01)
         logistic = LogisticRegression(C=c_value, max_iter=1000)
         logistic.fit(X_train, y_train)
-
-        # Making predictions
+        
+        # Predictions and Metrics
         y_pred = logistic.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred, average='macro')
         precision = precision_score(y_test, y_pred, average='macro')
-        st.markdown(f"<h4 style='font-weight:bold;'>Accuracy Score: {acc}</h4>", unsafe_allow_html=True)
+        recall = recall_score(y_test, y_pred, average='macro')
+        r2 = r2_score(y_test, y_pred)
+        
+        if y.dtype == 'object' or y.dtype.name == 'category':
+            label_encoder = LabelEncoder()
+            y = label_encoder.fit_transform(y)
+            class_labels = label_encoder.classes_
+        else:
+            class_labels = np.unique(y)
+        
+        # Show scores
+        st.markdown(f"<h4 style='font-weight:bold;'>Accuracy Score: {acc:.4f}</h4>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-weight:bold;'>F1 Score (macro): {f1:.4f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-weight:bold;'>Precision (macro): {precision:.4f}</h5>", unsafe_allow_html=True)
-
-        # Plotting confusion matrix
+        st.markdown(f"<h5 style='font-weight:bold;'>Recall (macro): {recall:.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>R² Score: {r2:.4f}</h5>", unsafe_allow_html=True)
+        
+        # Determine class labels
+        if 'label_encoder' in locals():
+            class_labels = list(label_encoder.classes_)
+        else:
+            class_labels = sorted(np.unique(y_test))
+        
+        # Confusion Matrix
         cm = confusion_matrix(y_test, y_pred)
         plt.figure(figsize=(6, 4))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=class_labels, yticklabels=class_labels)
         plt.xlabel('Predicted')
         plt.ylabel('Actual')
-        plt.title('Confusion Matrix')
+        plt.title('Confusion Matrix - Logistic Regression')
         st.pyplot(plt)
-        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
-        st.caption("This mapping is used for interpreting the confusion matrix.")
-
-
-        # Plotting Accuracy vs C values
+        
+        # TP, FP, FN, TN per class
+        st.markdown("### Confusion Matrix Analysis (Per Class)")
+        for i, class_name in enumerate(class_labels):
+            TP = cm[i, i]
+            FP = cm[:, i].sum() - TP
+            FN = cm[i, :].sum() - TP
+            TN = cm.sum() - (TP + FP + FN)
+        
+            st.markdown(f"**Class `{class_name}`**")
+            st.write(f"- True Positive (TP): {TP}")
+            st.write(f"- False Positive (FP): {FP}")
+            st.write(f"- False Negative (FN): {FN}")
+            st.write(f"- True Negative (TN): {TN}")
+            st.markdown("---")
+        
+        # Accuracy vs C value plot
         c_values = np.linspace(0.01, 10.0, 100)
         train_scores = []
         test_scores = []
-
+        
         for c in c_values:
-            logistic = LogisticRegression(C=c, max_iter=1000)
-            logistic.fit(X_train, y_train)
-            train_scores.append(logistic.score(X_train, y_train))
-            test_scores.append(logistic.score(X_test, y_test))
-
+            model = LogisticRegression(C=c, max_iter=1000)
+            model.fit(X_train, y_train)
+            train_scores.append(model.score(X_train, y_train))
+            test_scores.append(model.score(X_test, y_test))
+        
         plt.figure(figsize=(6, 4))
         plt.plot(c_values, train_scores, label='Train Accuracy')
         plt.plot(c_values, test_scores, label='Test Accuracy')
@@ -587,6 +620,7 @@ if uploaded_file is not None:
         plt.title('Accuracy vs C Value')
         plt.legend()
         st.pyplot(plt)
+
 
         image_path = 'logistic.png'  # Path to your Logistic Regression diagram
         st.markdown(
