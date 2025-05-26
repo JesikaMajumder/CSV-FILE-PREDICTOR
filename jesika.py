@@ -413,17 +413,26 @@ if uploaded_file is not None:
             unsafe_allow_html=True
         )
     if algo=="SVMC":
-      
-        # Assuming X_train, X_test, y_train, y_test are already defined
+        # Train SVM
         svm_classifier = SVC(kernel='rbf', C=1.0, gamma='scale')
         svm_classifier.fit(X_train, y_train)
         y_pred = svm_classifier.predict(X_test)
-
+        
+        # Metrics
         accuracy = accuracy_score(y_test, y_pred)
         f1_scores = cross_val_score(svm_classifier, X_train, y_train, cv=5, scoring='f1_macro')
         recall = recall_score(y_test, y_pred, average='macro')
+        r2 = r2_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred, average='macro')
+        
+        # Display scores
+        st.markdown(f"<h5 style='font-weight:bold;'>The Accuracy is: {accuracy:.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>The F1 Score is: {f1_scores.mean():.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
-
+        st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
+        
+        # Optional: recall image
         image_path = 'recall.png'
         st.markdown(
             f"""
@@ -431,24 +440,37 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
-        st.markdown(f"<h5 style='font-weight:bold;'>The Accuracy is: {accuracy}</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h5 style='font-weight:bold;'>The F1 Score is: {f1_scores.mean()}</h5>", unsafe_allow_html=True)
-
-        r2 = r2_score(y_test, y_pred)
-        st.markdown(f"<h5 style='font-weight:bold;'>Precision of data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
-        recall = recall_score(y_test, y_pred, average='macro')
-        st.markdown(f"<h4 style='font-family: Arial;'>Recall: {recall:.2f}</h4>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
-        image_path = 'recall.png'
+        
+        # Detect class labels
+        if 'label_encoder' in locals():
+            class_labels = list(label_encoder.classes_)
+        else:
+            class_labels = sorted(np.unique(y_test))
+        
+        # Confusion matrix
         cm = confusion_matrix(y_test, y_pred)
-        plt.figure(figsize=(5, 4))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=class_labels, yticklabels=class_labels)
         plt.xlabel('Predicted')
         plt.ylabel('Actual')
-        plt.title('Confusion Matrix for SVMC')
+        plt.title('Confusion Matrix for SVM')
         st.pyplot(plt)
-        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
-        st.caption("This mapping is used for interpreting the confusion matrix.")
+        
+        # TP, FP, FN, TN per class
+        st.markdown("### Confusion Matrix Analysis (Per Class)")
+        for i, class_name in enumerate(class_labels):
+            TP = cm[i, i]
+            FP = cm[:, i].sum() - TP
+            FN = cm[i, :].sum() - TP
+            TN = cm.sum() - (TP + FP + FN)
+        
+            st.markdown(f"**Class `{class_name}`**")
+            st.write(f"- True Positive (TP): {TP}")
+            st.write(f"- False Positive (FP): {FP}")
+            st.write(f"- False Negative (FN): {FN}")
+            st.write(f"- True Negative (TN): {TN}")
+            st.markdown("---")
 
         image_path = 'svmc.png'  # Path to your SVMR image
         st.markdown(
