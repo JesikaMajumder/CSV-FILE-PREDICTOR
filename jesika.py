@@ -131,39 +131,57 @@ if uploaded_file is not None:
         # plt.title('Confusion Matrix for SVM')
         # st.pyplot(plt)
     elif algo=="K NEAREST NEIGHBOUR":
+       # Train and predict
         k_value = st.slider('Select k value for KNN:', min_value=1, max_value=10, value=5)
         knn_classifier = KNeighborsClassifier(n_neighbors=k_value)
         knn_classifier.fit(X_train, y_train)
         y_pred = knn_classifier.predict(X_test)
+        
+        # Evaluate
         accuracy = accuracy_score(y_test, y_pred)
-        image_path = 'accuracy.jpg'
-        st.markdown(f"<h5 style='font-weight:bold;'>Accuracy: {accuracy}</h5>", unsafe_allow_html=True)
         f1 = f1_score(y_test, y_pred, average='macro')
-        st.markdown(f"<h5 style='font-weight:bold;'>F1 Score (macro): {f1:.4f}</h5>", unsafe_allow_html=True)
-
-        image_path = 'F1.png'
-        st.markdown(
-            f"""
-            <img src="data:image/png;base64,{base64.b64encode(open(image_path, "rb").read()).decode()}" width="400">
-            """,
-            unsafe_allow_html=True
-        )
-        r2 = r2_score(y_test, y_pred)
-        st.markdown(f"<h5 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         recall = recall_score(y_test, y_pred, average='macro')
+        r2 = r2_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred, average='macro')
+        
+        # Display scores
+        st.markdown(f"<h5 style='font-weight:bold;'>Accuracy: {accuracy:.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>F1 Score (macro): {f1:.4f}</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-family: Arial;'>Recall: {recall:.2f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
-       
-        # Plotting confusion matrix
+        
+        # Label decoding (if any)
+        if 'label_encoder' in locals():
+            class_labels = list(label_encoder.classes_)
+        else:
+            class_labels = sorted(np.unique(y_test))
+        
+        # Confusion matrix
         cm = confusion_matrix(y_test, y_pred)
-        plt.figure(figsize=(6,4))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=class_labels, yticklabels=class_labels)
         plt.xlabel('Predicted')
         plt.ylabel('Actual')
         plt.title('Confusion Matrix for KNN')
         st.pyplot(plt)
-        st.caption("Note: 0 represents False class, and any non-zero value represents True class.")
-        st.caption("This mapping is used for interpreting the confusion matrix.")
+        
+        # TP, FP, FN, TN per class
+        st.markdown("### Confusion Matrix Analysis (Per Class)")
+        for i, class_name in enumerate(class_labels):
+            TP = cm[i, i]
+            FP = cm[:, i].sum() - TP
+            FN = cm[i, :].sum() - TP
+            TN = cm.sum() - (TP + FP + FN)
+        
+            st.markdown(f"**Class `{class_name}`**")
+            st.write(f"- True Positive (TP): {TP}")
+            st.write(f"- False Positive (FP): {FP}")
+            st.write(f"- False Negative (FN): {FN}")
+            st.write(f"- True Negative (TN): {TN}")
+            st.markdown("---")
+
 
         image_path = 'KNN.png'  # Path to your SVR image
         st.markdown(
