@@ -272,7 +272,7 @@ if uploaded_file is not None:
             st.write(f"- False Negative (FN): {FN}")
             st.write(f"- True Negative (TN): {TN}")
             st.markdown("---")
-
+        image_path = "decision-tree-algo.png"
         st.markdown(
             f"""
             <div style="display: flex; justify-content: flex-end;">
