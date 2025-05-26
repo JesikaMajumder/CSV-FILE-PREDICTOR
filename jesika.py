@@ -136,6 +136,12 @@ if uploaded_file is not None:
         knn_classifier = KNeighborsClassifier(n_neighbors=k_value)
         knn_classifier.fit(X_train, y_train)
         y_pred = knn_classifier.predict(X_test)
+        if y.dtype == 'object' or y.dtype.name == 'category':
+            label_encoder = LabelEncoder()
+            y = label_encoder.fit_transform(y)
+            class_labels = label_encoder.classes_
+        else:
+            class_labels = np.unique(y)
         
         # Evaluate
         accuracy = accuracy_score(y_test, y_pred)
