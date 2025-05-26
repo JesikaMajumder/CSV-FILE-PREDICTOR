@@ -154,7 +154,6 @@ if uploaded_file is not None:
         st.markdown(f"<h5 style='font-weight:bold;'>Accuracy: {accuracy:.4f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-weight:bold;'>F1 Score (macro): {f1:.4f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h5 style='font-weight:bold;'>Precision of Data (R² Score): {r2:.2f}</h5>", unsafe_allow_html=True)
-        st.markdown(f"<h5 style='font-family: Arial;'>Recall: {recall:.2f}</h5>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='font-weight:bold;'>The Recall Score is: {recall:.2f}</h3>", unsafe_allow_html=True)
         
         # Label decoding (if any)
